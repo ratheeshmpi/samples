@@ -1,0 +1,124 @@
+component.html
+
+
+<p>cmp-registration works!</p>
+<form [formGroup]="frmRegistration" (ngSubmit)="onSubmit()">
+  <input formControlName= "txtName"  placeholder="Name" aria-label="Name"><br><br>
+  <input formControlName= "txtMobile" placeholder="Mobile" aria-label="Mobile"><br><br>
+  <input formControlName= "txtPwd"  placeholder="Password" aria-label="Password"><br><br>
+  <input type="submit" value="Save">
+</form>
+<h6>From HTML Controls</h6>
+<p> {{frmRegistration.value | json}} </p>
+
+
+ main component.ts(cmp-registeration)
+
+import { Component, OnInit } from '@angular/core';
+import {FormGroup, FormControl  } from "@angular/forms";
+import { HttpClient } from "@angular/common/http";
+
+@Component({
+  selector: 'app-cmp-registration',
+  templateUrl: './cmp-registration.component.html',
+  styleUrls: ['./cmp-registration.component.css']
+})
+export class CmpRegistrationComponent implements OnInit {
+  frmRegistration = new FormGroup({
+    txtName : new FormControl(),
+    txtMobile : new FormControl(),
+    txtPwd : new FormControl()
+  })
+  constructor(private oHttp : HttpClient ) {}
+
+  ngOnInit() {
+  }
+
+  // GetData(){
+  //   this.oHttp.get<any>("http://www.mocky.io/v2/5e301cf532000077008587f1").subscribe(
+  //     (x) => {
+  //       this.frmRegistration.get("txtName").setValue( x.Name)
+  //       this.frmRegistration.get("txtMobile").setValue( x.Phone)
+  //       this.frmRegistration.get("txtPwd").setValue( x.Password)
+  //       console.info("Got Data");
+  //     })
+  //     console.info("Called");
+  // }
+  // GetData_Core(){
+
+  //   this.oHttp.get<any>("https://localhost:5001/api/Employee/Search?EMPID=1001").subscribe(
+  //     (x) => {
+  //       this.frmRegistration.get("txtName").setValue( x[0].name)
+  //       this.frmRegistration.get("txtMobile").setValue( x[0].mobile)
+  //       this.frmRegistration.get("txtPwd").setValue( x[0].password)
+  //       console.info("Got Data");
+  //     })
+
+  // }
+  onSubmit(){
+    debugger;
+    this.oHttp.post("https://localhost:5001/api/Employee/Insert/", this.frmRegistration).subscribe(
+      (res) => console.info(res),
+      (err) => console.info(err)
+    )
+    console.log(this.frmRegistration.value);
+  }
+}
+
+
+app module.ts
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from "@angular/common/http";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms" ;
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+
+import { MdlRegistrationModule } from "./mdl-registration/mdl-registration.module";
+@NgModule({
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule
+    , HttpClientModule
+    , ReactiveFormsModule
+    , FormsModule
+    , MdlRegistrationModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
+
+app.routing.module.ts
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { CmpRegistrationComponent } from './mdl-registration/cmp-registration/cmp-registration.component'
+
+const routes: Routes = [
+  {"path":'', component:CmpRegistrationComponent}
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
